@@ -1,0 +1,5 @@
+mongodb:
+  db: test_lan_monitor
+  username: root
+  password: root
+
