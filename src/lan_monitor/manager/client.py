@@ -1,5 +1,8 @@
 from lan_monitor.manager.base import BaseManger
 from lan_monitor.model import status
+import datetime
+import pymongo
+
 
 class ClientManager(BaseManger):
 
@@ -8,6 +11,12 @@ class ClientManager(BaseManger):
         self.db = self.mc[self.config["mongodb"]["db"]]
         self.client_collection = self.db["client"]
         self.status_collection = self.db["status"]
+
+    def get_client(self, query: dict):
+        return self.client_collection.find(query)
+
+    def get_client_status(self, query: dict):
+        return self.status_collection.find(query)
 
     def add_client(self, client: status.ClientModel):
         """Add a client to client collection, update if exists
@@ -22,3 +31,12 @@ class ClientManager(BaseManger):
             client.to_json(),
             upsert=True
         )
+
+    def add_client_status(self, client_status: status.ClientStatusRecordModel):
+        """Insert a stutus of client to client collection
+
+        Args:
+            client_status (ClientStatusRecordModel): client status to be insert
+        """
+
+        self.status_collection.insert_one(client_status.to_json())
