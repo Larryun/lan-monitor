@@ -1,6 +1,8 @@
 import unittest
 from lan_monitor.model import status
 import datetime
+from bson.objectid import ObjectId
+
 
 class TestClientModel(unittest.TestCase):
 
@@ -25,12 +27,13 @@ class TestClientModel(unittest.TestCase):
 class TestClientStatusRecordModel(unittest.TestCase):
 
     def test_status(self):
+        obj_id = ObjectId("61595e74695979fbbd6bfc83")
         now = datetime.datetime.utcnow()
         record = status.ClientStatusRecordModel({
-            "client": "a1b2",
+            "client_id": obj_id,
             "ip_addr": "123.123.123.123"
         }, timestamp=now)
 
-        self.assertEqual(record.client,  "a1b2")
+        self.assertEqual(record.client_id,  obj_id)
         self.assertEqual(record.timestamp,  now)
         self.assertEqual(record.ip_addr, "123.123.123.123")

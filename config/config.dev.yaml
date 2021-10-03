@@ -1,4 +1,6 @@
 mongodb:
+  host: localhost
+  port: 27017
   db: dev_lan_monitor
   username: root
   password: root

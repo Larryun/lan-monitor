@@ -5,6 +5,7 @@ from lan_monitor.manager.client import ClientManager
 from lan_monitor.model.status import ClientModel
 import datetime
 from pprint import pprint
+from bson.objectid import ObjectId
 
 mc = create_mongo_client()
 config = read_yaml("config/config.test.yaml")
@@ -32,15 +33,15 @@ class TestClientManager(unittest.TestCase):
         return super().setUp()
 
     def test_get_client(self):
-        self.client_manager.add_client(client1)
+        self.client_manager.insert_client(client1)
         res = self.client_manager.get_client({
             "mac_addr": "ffff:ffff:ffff:ffff",
         })
         self.assertEqual(res[0]["name"], "client1")
 
-    def test_add_client(self):
+    def test_insert_client(self):
         # add the first client
-        self.client_manager.add_client(client1)
+        self.client_manager.insert_client(client1)
 
         # check client counts
         self.assertEqual(self.client_manager.client_collection.count_documents({}),
@@ -52,7 +53,7 @@ class TestClientManager(unittest.TestCase):
         })[0]["name"], "client1")
 
         # add client with same mac_addr but different name
-        self.client_manager.add_client(client2)
+        self.client_manager.insert_client(client2)
 
         # check client counts
         self.assertEqual(self.client_manager.client_collection.count_documents({
@@ -63,7 +64,7 @@ class TestClientManager(unittest.TestCase):
             "mac_addr": "ffff:ffff:ffff:ffff",
         })[0]["name"], "client2")
 
-        self.client_manager.add_client(client3)
+        self.client_manager.insert_client(client3)
 
         # check client counts
         self.assertEqual(self.client_manager.client_collection.count_documents({}),
@@ -73,31 +74,32 @@ class TestClientManager(unittest.TestCase):
             "mac_addr": "ffff:ffff:ffff:fffe",
         })[0]["name"], "client3")
 
-    def test_add_client_status(self):
-        self.client_manager.add_client(client1)
+    def test_insert_client_status(self):
+        self.client_manager.insert_client(client1)
         client1_id = self.client_manager.get_client({"name": client1["name"]})[0]["_id"]
 
         one_minute = datetime.timedelta(minutes=1)
         date1 = datetime.datetime.utcnow()
 
         client_status1 = status.ClientStatusRecordModel({
-            "client_id": str(client1_id),
+            "client_id": client1_id,
             "ip_addr": "1.1.1.1"
         }, timestamp=date1)
 
 
         client_status2 = status.ClientStatusRecordModel({
-            "client_id": str(client1_id),
+            "client_id": client1_id,
             "ip_addr": "1.1.1.1"
         }, timestamp=date1 + one_minute)
 
         client_status3 = status.ClientStatusRecordModel({
-            "client_id": str(client1_id),
+            "client_id": client1_id,
             "ip_addr": "1.1.1.1"
         }, timestamp=date1 + one_minute)
+        print(client_status1.to_json())
 
-        self.client_manager.add_client_status(client_status1)
-        self.client_manager.add_client_status(client_status2)
+        self.client_manager.insert_client_status(client_status1)
+        self.client_manager.insert_client_status(client_status2)
         res = self.client_manager.get_client_status({})
 
         for i in res:

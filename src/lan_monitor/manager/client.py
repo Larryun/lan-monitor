@@ -12,13 +12,16 @@ class ClientManager(BaseManger):
         self.client_collection = self.db["client"]
         self.status_collection = self.db["status"]
 
+    def has_client(self, query: dict):
+        return self.client_collection.count_documents(query) > 0
+
     def get_client(self, query: dict):
         return self.client_collection.find(query)
 
     def get_client_status(self, query: dict):
         return self.status_collection.find(query)
 
-    def add_client(self, client: status.ClientModel):
+    def insert_client(self, client: status.ClientModel):
         """Add a client to client collection, update if exists
 
         Args:
@@ -32,7 +35,7 @@ class ClientManager(BaseManger):
             upsert=True
         )
 
-    def add_client_status(self, client_status: status.ClientStatusRecordModel):
+    def insert_client_status(self, client_status: status.ClientStatusRecordModel):
         """Insert a stutus of client to client collection
 
         Args:

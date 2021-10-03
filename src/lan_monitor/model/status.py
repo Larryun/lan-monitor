@@ -1,4 +1,6 @@
 from jsonobject import *
+from lan_monitor.model.property import ObjectIdProperty
+from bson.objectid import ObjectId
 
 
 class ClientModel(JsonObject):
@@ -7,6 +9,7 @@ class ClientModel(JsonObject):
 
 
 class ClientStatusRecordModel(JsonObject):
-    client_id = StringProperty()
+    client_id = ObjectIdProperty()
     timestamp = DateTimeProperty(exact=True)
     ip_addr = StringProperty()
+
