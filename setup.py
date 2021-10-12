@@ -5,7 +5,7 @@ setuptools.setup(
     version="0.0.1",
     author="Larry",
     packages=["lan_monitor"],
-    package_dir={"": "src"},
+    # package_dir={"": "src"},
     python_requires='>=3.6',
     install_requires=[
         "pymongo==3.12.0",

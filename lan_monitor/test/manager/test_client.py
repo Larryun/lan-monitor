@@ -92,12 +92,6 @@ class TestClientManager(unittest.TestCase):
             "ip_addr": "1.1.1.1"
         }, timestamp=date1 + one_minute)
 
-        client_status3 = status.ClientStatusRecordModel({
-            "client_id": client1_id,
-            "ip_addr": "1.1.1.1"
-        }, timestamp=date1 + one_minute)
-        print(client_status1.to_json())
-
         self.client_manager.insert_client_status(client_status1)
         self.client_manager.insert_client_status(client_status2)
         res = self.client_manager.get_client_status({})

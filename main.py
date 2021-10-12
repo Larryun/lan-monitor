@@ -12,7 +12,6 @@ from bson.objectid import ObjectId
 
 def update_status(client_manager, monitor, sample):
     clients_info = monitor.get_clients(sample=sample)
-    print(len(clients_info))
 
     now = datetime.datetime.utcnow()
 
