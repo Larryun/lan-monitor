@@ -12,7 +12,7 @@ def get_manager():
             mongo_config["username"], mongo_config["password"]
         )
 
-        g.manager = client.ClientManager(mc, current_app.config["mongodb"])
+        g.manager = client.ClientManager(mc, current_app.config)
     
     return g.manager
 

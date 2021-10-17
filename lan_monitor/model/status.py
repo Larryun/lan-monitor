@@ -1,6 +1,5 @@
 from jsonobject import *
 from lan_monitor.model.property import ObjectIdProperty
-from bson.objectid import ObjectId
 
 
 class ClientModel(JsonObject):
