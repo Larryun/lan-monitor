@@ -2,7 +2,7 @@ from flask import Flask
 from flask_restful import Api
 from os import environ
 from lan_monitor.util import read_yaml
-from api.db import close_manager
+from web.api.db import close_manager
 from resource import client
 import json
 from bson import ObjectId
@@ -21,9 +21,9 @@ api = Api(app)
 if "FLASK_ENV" not in environ:
     raise RuntimeError("FLASK_ENV is not set")
 elif environ["FLASK_ENV"] == "dev":
-    config = read_yaml("api/instance/api.config.dev.yaml")
+    config = read_yaml("web/api/instance/api.config.dev.yaml")
 elif environ["FLASK_ENV"] == "test":
-    config = read_yaml("api/instance/api.config.test.yaml")
+    config = read_yaml("web/api/instance/api.config.test.yaml")
 else:
     raise RuntimeError("FLASK_ENV is not dev/test")
 
