@@ -1,5 +1,7 @@
+import resource
 from flask import Flask
 from flask_restful import Api
+from flask_cors import CORS
 from os import environ
 from lan_monitor.util import read_yaml
 from web.api.db import close_manager
@@ -16,6 +18,9 @@ class CustomJSONEncoder(json.JSONEncoder):
 
 app = Flask(__name__)
 api = Api(app)
+
+CORS(app, resources={r'/*': {"origins": "*"}})
+
 
 # set configurations
 if "FLASK_ENV" not in environ:
