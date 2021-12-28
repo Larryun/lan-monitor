@@ -1,12 +1,14 @@
-from flask_restful import Resource, reqparse
-from web.api.db import get_manager
 from bson import ObjectId
+from flask_restful import Resource, reqparse
 from pymongo import DESCENDING
+
+from web.api.db import get_manager
 
 client_status_parser = reqparse.RequestParser()
 client_status_parser.add_argument("limit",
                                   default=10,
                                   type=int)
+
 
 class Client(Resource):
 

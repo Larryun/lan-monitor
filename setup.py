@@ -10,5 +10,7 @@ setuptools.setup(
     install_requires=[
         "pymongo==3.12.0",
         "scapy==2.4.5",
+        "jsonobject",
+        "pyyaml"
     ]
 )
