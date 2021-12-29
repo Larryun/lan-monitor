@@ -3,12 +3,10 @@ from lan_monitor.model import status
 from lan_monitor.util import create_mongo_client, read_yaml
 from lan_monitor.manager.client import ClientManager
 from lan_monitor.model.status import ClientModel
-import datetime
-from pprint import pprint
-from bson.objectid import ObjectId
+from time import time
 
 mc = create_mongo_client()
-config = read_yaml("config/config.test.yaml")
+config = read_yaml("../config/config.test.yaml")
 
 client1 = ClientModel({
     "mac_addr": "ffff:ffff:ffff:ffff",
@@ -78,8 +76,8 @@ class TestClientManager(unittest.TestCase):
         self.client_manager.insert_client(client1)
         client1_id = self.client_manager.get_client({"name": client1["name"]})[0]["_id"]
 
-        one_minute = datetime.timedelta(minutes=1)
-        date1 = datetime.datetime.utcnow()
+        one_minute = 60
+        date1 = time()
 
         client_status1 = status.ClientStatusRecordModel({
             "client_id": client1_id,

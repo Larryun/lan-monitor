@@ -9,6 +9,6 @@ class ClientModel(JsonObject):
 
 class ClientStatusRecordModel(JsonObject):
     client_id = ObjectIdProperty()
-    timestamp = DateTimeProperty(exact=True)
+    timestamp = FloatProperty()
     ip_addr = StringProperty()
 

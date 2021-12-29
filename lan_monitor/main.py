@@ -1,19 +1,17 @@
 import argparse
-import lan_monitor
 from lan_monitor.monitor import Monitor
 from lan_monitor.manager.client import ClientManager
 from lan_monitor.util import create_mongo_client, read_yaml
 from lan_monitor.model.status import ClientStatusRecordModel, ClientModel
-from pymongo import MongoClient
 import time
-import datetime
 from bson.objectid import ObjectId
 
 
 def update_status(client_manager, monitor, sample):
     clients_info = monitor.get_clients(sample=sample)
+    print("Found " + str(len(clients_info)) + " clients")
 
-    now = datetime.datetime.utcnow()
+    now = time.time()
 
     for cli_info in clients_info:
         # create client if not exsits
@@ -63,6 +61,7 @@ def main():
 
     manager = ClientManager(mc, config)
     monitor = Monitor("10.0.0.0/24")
+    # monitor = Monitor("172.27.239.0/24")
 
     while True:
         update_status(manager, monitor, args.sample)

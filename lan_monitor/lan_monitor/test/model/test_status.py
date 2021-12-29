@@ -1,6 +1,6 @@
 import unittest
 from lan_monitor.model import status
-import datetime
+from time import time
 from bson.objectid import ObjectId
 
 
@@ -28,7 +28,7 @@ class TestClientStatusRecordModel(unittest.TestCase):
 
     def test_status(self):
         obj_id = ObjectId("61595e74695979fbbd6bfc83")
-        now = datetime.datetime.utcnow()
+        now = time()
         record = status.ClientStatusRecordModel({
             "client_id": obj_id,
             "ip_addr": "123.123.123.123"
