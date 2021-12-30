@@ -1,5 +1,6 @@
 from lan_monitor.manager.base import BaseManger
 from lan_monitor.model import status
+from bson import ObjectId
 import datetime
 import pymongo
 
@@ -12,17 +13,28 @@ class ClientManager(BaseManger):
         self.client_collection = self.db["client"]
         self.status_collection = self.db["status"]
 
-    def has_client(self, query: dict, projection=None):
-        return self.client_collection.count_documents(query) > 0
+    def has_client(self, client_id: str):
+        return self.client_collection.count_documents({"client_id": ObjectId(client_id)}) > 0
 
-    def get_client(self, query: dict, include_id=False):
+    def _get_client(self, query, include_id=False):
         if include_id:
             return self.client_collection.find(query)
         else:
             return self.client_collection.find(query, {"_id": False})
 
+    def get_all_clients(self, include_id=False):
+        return self._get_client({}, include_id)
 
-    def get_client_status(self, query: dict, include_id=False):
+    def get_client_by_id(self, client_id, include_id=False):
+        query = {"_id": client_id}
+        return self._get_client(query, include_id)
+
+    def get_client_by_mac_addr(self, mac_addr, include_id=False):
+        query = {"mac_addr": mac_addr}
+        return self._get_client(query, include_id)
+
+    def get_client_status_by_id(self, client_id, include_id=False):
+        query = {"client_id": ObjectId(client_id)}
         if include_id:
             return self.status_collection.find(query)
         else:
@@ -34,7 +46,6 @@ class ClientManager(BaseManger):
         Args:
             client (ClientModel): client to be insert
         """
-
         # create if not exists
         self.client_collection.replace_one(
             {"mac_addr": client.mac_addr},
@@ -48,5 +59,4 @@ class ClientManager(BaseManger):
         Args:
             client_status (ClientStatusRecordModel): client status to be insert
         """
-
         self.status_collection.insert_one(client_status.to_json())

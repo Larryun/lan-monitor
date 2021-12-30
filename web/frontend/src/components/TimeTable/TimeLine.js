@@ -20,7 +20,7 @@ function TimeInterval(props) {
 class TimeLine extends React.Component {
     render() {
         let today = new Date()
-        let initial_time = new Date(today.getFullYear(), today.getMonth(), today.getDate())
+        let initial_time = new Date(today.getFullYear(), today.getMonth(), today.getDate() - 1)
 
         let intervals = this.props.intervals.map((interval) => {
             return <TimeInterval key={interval.start}
@@ -32,7 +32,7 @@ class TimeLine extends React.Component {
         });
         return (
             <tr className="align-items-center">
-                <td md="1" xs={5} className="text-center">
+                <td className="text-center">
                     {this.props.ip_addr} <br/> {this.props.mac_addr}
                 </td>
                 <td colspan="24" className="h-100" style={{padding: 0, height: "100%"}}>

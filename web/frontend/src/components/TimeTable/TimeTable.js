@@ -3,6 +3,8 @@ import TimeLine from './TimeLine';
 import Container from 'react-bootstrap/Container'
 import Table from 'react-bootstrap/Table'
 
+import {getClients} from '../../api/monitor'
+
 import './TimeTable.css';
 
 let data = {
@@ -32,16 +34,31 @@ function TimeTableHeader(props) {
 
     return (
         <thead className="text-center">
-            <tr>
-                {headers.map((x) => {
-                    return <th className="border" key={x}>{x}</th>
-                })}
-            </tr>
+        <tr>
+            {headers.map((x) => {
+                return <th className="border" key={x}>{x}</th>
+            })}
+        </tr>
         </thead>
     )
 }
 
 class TimeTable extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            clients: [],
+        }
+    }
+
+    componentDidMount() {
+        getClients().then((res) => {
+            this.setState({
+                clients: res.data
+            })
+        })
+    }
+
     render() {
         return (
             <Container fluid style={{width: "max-content", padding: 0}}>

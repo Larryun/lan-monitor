@@ -32,9 +32,7 @@ class TestClientManager(unittest.TestCase):
 
     def test_get_client(self):
         self.client_manager.insert_client(client1)
-        res = self.client_manager.get_client({
-            "mac_addr": "ffff:ffff:ffff:ffff",
-        })
+        res = self.client_manager.get_client_by_mac_addr("ffff:ffff:ffff:ffff")
         self.assertEqual(res[0]["name"], "client1")
 
     def test_insert_client(self):
@@ -46,9 +44,8 @@ class TestClientManager(unittest.TestCase):
                          1)
 
         # check name of client
-        self.assertEqual(self.client_manager.get_client({
-            "mac_addr": "ffff:ffff:ffff:ffff",
-        })[0]["name"], "client1")
+        res = self.client_manager.get_client_by_mac_addr("ffff:ffff:ffff:ffff")
+        self.assertEqual(res[0]["name"], "client1")
 
         # add client with same mac_addr but different name
         self.client_manager.insert_client(client2)
@@ -58,9 +55,8 @@ class TestClientManager(unittest.TestCase):
             "mac_addr": "ffff:ffff:ffff:ffff",
         }), 1)
         # check if client name updated
-        self.assertEqual(self.client_manager.get_client({
-            "mac_addr": "ffff:ffff:ffff:ffff",
-        })[0]["name"], "client2")
+        res = self.client_manager.get_client_by_mac_addr("ffff:ffff:ffff:ffff")
+        self.assertEqual(res[0]["name"], "client2")
 
         self.client_manager.insert_client(client3)
 
@@ -68,13 +64,13 @@ class TestClientManager(unittest.TestCase):
         self.assertEqual(self.client_manager.client_collection.count_documents({}),
                          2)
         # check if client name updated
-        self.assertEqual(self.client_manager.get_client({
-            "mac_addr": "ffff:ffff:ffff:fffe",
-        })[0]["name"], "client3")
+        res = self.client_manager.get_client_by_mac_addr("ffff:ffff:ffff:fffe")
+        self.assertEqual(res[0]["name"], "client3")
 
     def test_insert_client_status(self):
         self.client_manager.insert_client(client1)
-        client1_id = self.client_manager.get_client({"name": client1["name"]}, include_id=True)[0]["_id"]
+        client1_id = self.client_manager.get_client_by_mac_addr(client1["mac_addr"],
+                                                                include_id=True)[0]["_id"]
 
         one_minute = 60
         date1 = time()
@@ -92,7 +88,7 @@ class TestClientManager(unittest.TestCase):
 
         self.client_manager.insert_client_status(client_status1)
         self.client_manager.insert_client_status(client_status2)
-        res = self.client_manager.get_client_status({})
+        res = self.client_manager.get_client_status_by_id(client1_id)
 
         for i in res:
             self.assertTrue(i["client_id"], client1_id)
