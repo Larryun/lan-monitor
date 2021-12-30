@@ -16,29 +16,43 @@ class ClientManager(BaseManger):
     def has_client(self, client_id: str):
         return self.client_collection.count_documents({"client_id": ObjectId(client_id)}) > 0
 
-    def _get_client(self, query, include_id=False):
+    def _get_client(self, query: dict, include_id=False):
         if include_id:
             return self.client_collection.find(query)
         else:
             return self.client_collection.find(query, {"_id": False})
 
-    def get_all_clients(self, include_id=False):
-        return self._get_client({}, include_id)
-
-    def get_client_by_id(self, client_id, include_id=False):
-        query = {"_id": client_id}
-        return self._get_client(query, include_id)
-
-    def get_client_by_mac_addr(self, mac_addr, include_id=False):
-        query = {"mac_addr": mac_addr}
-        return self._get_client(query, include_id)
-
-    def get_client_status_by_id(self, client_id, include_id=False):
-        query = {"client_id": ObjectId(client_id)}
+    def _get_client_status(self, query: dict, include_id=False):
         if include_id:
             return self.status_collection.find(query)
         else:
             return self.status_collection.find(query, {"_id": False})
+
+    def get_all_clients(self, include_id=False):
+        return self._get_client({}, include_id)
+
+    def get_client_by_id(self, client_id: str, include_id=False):
+        query = {"_id": client_id}
+        return self._get_client(query, include_id)
+
+    def get_client_by_mac_addr(self, mac_addr: str, include_id=False):
+        query = {"mac_addr": mac_addr}
+        return self._get_client(query, include_id)
+
+    def get_client_status_by_id(self, client_id: str, include_id=False):
+        query = {"client_id": ObjectId(client_id)}
+        return self._get_client_status(query, include_id)
+
+    def get_client_status_by_time_range(self, client_id: str, start_time: float, end_time: float):
+        query = {
+            "client_id": ObjectId(client_id),
+            "timestamp": {
+                "$gte": start_time,
+                "$lt": end_time,
+            }
+        }
+        return self._get_client_status(query)
+
 
     def insert_client(self, client: status.ClientModel):
         """Add a client to client collection, update if exists

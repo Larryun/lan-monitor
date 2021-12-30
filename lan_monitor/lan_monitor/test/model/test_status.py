@@ -31,9 +31,7 @@ class TestClientStatusRecordModel(unittest.TestCase):
         now = time()
         record = status.ClientStatusRecordModel({
             "client_id": obj_id,
-            "ip_addr": "123.123.123.123"
         }, timestamp=now)
 
         self.assertEqual(record.client_id,  obj_id)
         self.assertEqual(record.timestamp,  now)
-        self.assertEqual(record.ip_addr, "123.123.123.123")
