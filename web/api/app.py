@@ -6,9 +6,14 @@ from flask_restful import Api
 from os import environ
 
 from lan_monitor.util import read_yaml
-from web.api.resource import client
+from resource import client
+from db import close_manager
 
-from web.api.db import close_manager
+
+# from web.api.resource import client
+#
+# from web.api.db import close_manager
+#
 
 
 class CustomJSONEncoder(json.JSONEncoder):

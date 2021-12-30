@@ -10,6 +10,12 @@ services:
       - "27017:27017"
     volumes:
       - mongo-db:/data/db
+  monitor:
+    network_mode: bridge
+    build:
+      context: .
+      dockerfile: "docker/Dockerfile"
+
 
 volumes:
   mongo-db:

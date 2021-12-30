@@ -4,12 +4,18 @@ from lan_monitor.manager.client import ClientManager
 from lan_monitor.util import create_mongo_client, read_yaml
 from lan_monitor.model.status import ClientStatusRecordModel, ClientModel
 import time
-from bson.objectid import ObjectId
+from pprint import pprint
+import ipaddress
+import logging
+
+logging.basicConfig()
+_LOGGER = logging.getLogger("root")
 
 
 def update_status(client_manager, monitor, sample):
     clients_info = monitor.get_clients(sample=sample)
-    print("Found " + str(len(clients_info)) + " clients")
+    _LOGGER.debug("Found " + str(len(clients_info)) + " clients")
+    _LOGGER.debug(clients_info)
 
     now = time.time()
 
@@ -49,7 +55,21 @@ def main():
                         type=int,
                         dest="sample")
 
+    parser.add_argument("-d", "--debug",
+                        help="debug",
+                        default=False,
+                        action="store_true",
+                        dest="debug")
+
     args = parser.parse_args()
+
+    if args.debug:
+
+        _LOGGER.setLevel(logging.DEBUG)
+
+
+    _LOGGER.info("Starting lan-monitor")
+
 
     config = read_yaml(args.config_path)
     mongo_config = config["mongodb"]
@@ -60,12 +80,14 @@ def main():
     )
 
     manager = ClientManager(mc, config)
-    monitor = Monitor("10.0.0.0/24")
+    monitor = Monitor(ipaddress.IPv4Network("10.0.0.0/24"))
     # monitor = Monitor("172.27.239.0/24")
 
     while True:
         update_status(manager, monitor, args.sample)
         time.sleep(args.interval)
+
+
 
 
 if __name__ == "__main__":

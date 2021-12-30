@@ -2,7 +2,7 @@ from bson import ObjectId
 from flask_restful import Resource, reqparse
 from pymongo import DESCENDING
 
-from web.api.db import get_manager
+from db import get_manager
 
 client_status_parser = reqparse.RequestParser()
 client_status_parser.add_argument("limit",
