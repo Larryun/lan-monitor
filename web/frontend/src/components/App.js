@@ -1,5 +1,5 @@
 import './App.css';
-import TimeTable from './components/TimeTable/TimeTable';
+import TimeTable from './TimeTable/TimeTable';
 
 function App() {
   return (

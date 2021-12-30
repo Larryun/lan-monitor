@@ -9,9 +9,9 @@ function TimeInterval(props) {
         backgroundColor: props.color,
         width: 100 * props.duration / (24 * 60)  + "%",
         height: "20px",
-        left: 100 * (props.start_time - props.initialTime) / (24 * 60 * 60)  + "%"
+        left: 100 * (props.start_time - props.initial_time) / (24 * 60 * 60)  + "%"
     }
-    console.log(100 * (props.start_time - props.initialTime) / (24 * 60 * 60))
+    console.log(100 * (props.start_time - props.initial_time) / (24 * 60 * 60))
     return (
         <div className="time-interval" style={interval_style}/>
     )
@@ -20,15 +20,14 @@ function TimeInterval(props) {
 class TimeLine extends React.Component {
     render() {
         let today = new Date()
-        let initialTime = new Date(today.getFullYear(), today.getMonth(), today.getDate())
-        console.log(initialTime)
+        let initial_time = new Date(today.getFullYear(), today.getMonth(), today.getDate())
 
         let intervals = this.props.intervals.map((interval) => {
             return <TimeInterval key={interval.start}
                                  color="red"
                                  start_time={interval.start}
                                  duration={interval.duration}
-                                 initialTime={initialTime.getTime() / 1000}
+                                 initial_time={initial_time.getTime() / 1000}
             />
         });
         return (

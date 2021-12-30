@@ -44,7 +44,7 @@ function TimeTableHeader(props) {
 class TimeTable extends React.Component {
     render() {
         return (
-            <Container fluid style={{width: "max-content"}}>
+            <Container fluid style={{width: "max-content", padding: 0}}>
                 <Table>
                     <TimeTableHeader/>
                     <TimeLine ip_addr={data.ip_addr}
