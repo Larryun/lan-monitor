@@ -1,8 +1,2 @@
-HOME_STATES={
-    2: "REACHABLE",
-    8: "DELAY",
-    # 4: "STALE",
-}
-
-CONST_MESSAGE = b"Marco"
+CONST_MESSAGE = b"message"
 CONST_MESSAGE_PORT = 5353

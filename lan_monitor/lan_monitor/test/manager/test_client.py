@@ -74,7 +74,7 @@ class TestClientManager(unittest.TestCase):
 
     def test_insert_client_status(self):
         self.client_manager.insert_client(client1)
-        client1_id = self.client_manager.get_client({"name": client1["name"]})[0]["_id"]
+        client1_id = self.client_manager.get_client({"name": client1["name"]}, include_id=True)[0]["_id"]
 
         one_minute = 60
         date1 = time()

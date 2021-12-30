@@ -23,16 +23,16 @@ def update_status(client_manager, monitor, sample):
         # create client if not exsits
         if not client_manager.has_client({"mac_addr": cli_info["mac"]}):
             client_manager.insert_client(ClientModel({
+                "ip_addr": cli_info["src_ip"],
                 "mac_addr": cli_info["mac"],
                 "name": ""
             }))
 
         # get client_id
-        res = client_manager.get_client({"mac_addr": cli_info["mac"]})[0]
+        res = client_manager.get_client({"mac_addr": cli_info["mac"]}, include_id=True)[0]
         # insert client status
         client_manager.insert_client_status(ClientStatusRecordModel({
             "client_id": res["_id"],
-            "ip_addr": cli_info["src_ip"],
         }, timestamp=now))
 
 
@@ -81,7 +81,6 @@ def main():
 
     manager = ClientManager(mc, config)
     monitor = Monitor(ipaddress.IPv4Network("10.0.0.0/24"))
-    # monitor = Monitor("172.27.239.0/24")
 
     while True:
         update_status(manager, monitor, args.sample)

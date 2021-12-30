@@ -1,16 +1,6 @@
-.flex-nowrap{
-    flex-wrap: nowrap !important;
-}
-
 .time-interval {
-    height: 100%;
-    display: inline-block;
+    position: relative;
+    display: inline-flex;
 }
 
-.red {
-    background-color: red;
-}
 
-.green {
-    background-color: green;
-}

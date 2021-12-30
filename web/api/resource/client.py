@@ -14,13 +14,13 @@ class Client(Resource):
 
     def get(self):
         manager = get_manager()
-        return list(manager.get_client({}))
+        return list(manager.get_client({}, include_id=True))
 
 
 class ClientStatus(Resource):
 
     def get(self, client_id):
-        """ get recent ClientStatus """
+        """ get recent ClientStatus by mac_addr"""
         # TODO add parameters for time range
         manager = get_manager()
         args = client_status_parser.parse_args()

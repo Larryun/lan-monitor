@@ -9,13 +9,6 @@ from lan_monitor.util import read_yaml
 from resource import client
 from db import close_manager
 
-
-# from web.api.resource import client
-#
-# from web.api.db import close_manager
-#
-
-
 class CustomJSONEncoder(json.JSONEncoder):
     """ Customized JsonEncoder for deserializing ObjectId """
 

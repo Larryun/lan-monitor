@@ -11,7 +11,6 @@ import logging
 
 _LOGGER = logging.getLogger("root")
 
-
 class Monitor:
 
     def __init__(self, target_subnet: ipaddress.IPv4Network, probe_interval: int = 60, verbose=False):

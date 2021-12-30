@@ -6,32 +6,40 @@ import './TimeTable.css';
 
 function TimeInterval(props) {
     let interval_style = {
-        'background-color': props.color,
-        width: props.width + '%',
+        backgroundColor: props.color,
+        width: 100 * props.duration / (24 * 60)  + "%",
+        height: "20px",
+        left: 100 * (props.start_time - props.initialTime) / (24 * 60 * 60)  + "%"
     }
+    console.log(100 * (props.start_time - props.initialTime) / (24 * 60 * 60))
     return (
-        <div className="time-interval" style={interval_style}>
-            {Date.parse(props.start_time)}
-        </div>
+        <div className="time-interval" style={interval_style}/>
     )
 }
 
 class TimeLine extends React.Component {
-
     render() {
+        let today = new Date()
+        let initialTime = new Date(today.getFullYear(), today.getMonth(), today.getDate())
+        console.log(initialTime)
+
         let intervals = this.props.intervals.map((interval) => {
-            return <TimeInterval color="red" start_time={interval.start} duration={interval.duration}/>
+            return <TimeInterval key={interval.start}
+                                 color="red"
+                                 start_time={interval.start}
+                                 duration={interval.duration}
+                                 initialTime={initialTime.getTime() / 1000}
+            />
         });
         return (
-            <Row className="align-items-center">
-                <Col md="1" xs={5}>
-                    <Row>{this.props.ip_addr}</Row>
-                    <Row>{this.props.mac_addr}</Row>
-                </Col>
-                <Col style={{padding: 0}}>
+            <tr className="align-items-center">
+                <td md="1" xs={5} className="text-center">
+                    {this.props.ip_addr} <br/> {this.props.mac_addr}
+                </td>
+                <td colspan="24" className="h-100" style={{padding: 0, height: "100%"}}>
                     {intervals}
-                </Col>
-            </Row>
+                </td>
+            </tr>
         )
     }
 }
@@ -44,7 +52,7 @@ TimeLine.propTypes = {
 
 TimeInterval.propTypes = {
     color: PropTypes.string.isRequired,
-    start_time: PropTypes.string.isRequired,
+    start_time: PropTypes.number.isRequired,
     duration: PropTypes.number.isRequired,
 }
 
