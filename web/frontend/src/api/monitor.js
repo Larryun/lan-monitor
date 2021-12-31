@@ -6,8 +6,16 @@ function getClients() {
     return axios.get(api_url + "/client")
 }
 
-function getClientStatus(client_id, limit) {
-    return axios.get(api_url + `/client/status/${client_id}?limit=${limit}`)
+function getClientStatus(client_id, start_time, end_time, interval, limit = 0) {
+    console.log(start_time, end_time)
+    return axios.get(api_url + `/client/status/${client_id}`, {
+        params: {
+            "start_time": start_time,
+            "end_time": end_time,
+            "interval": interval,
+            "limit": limit
+        }
+    })
 }
 
-export { getClients, getClientStatus }
+export {getClients, getClientStatus}

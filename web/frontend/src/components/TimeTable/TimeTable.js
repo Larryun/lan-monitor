@@ -7,25 +7,7 @@ import {getClients} from '../../api/monitor'
 
 import './TimeTable.css';
 
-let data = {
-    "ip_addr": "10.0.0.1",
-    "mac_addr": "ff:ff:ff:ff:ff",
-    "intervals": [{
-        "start": 1640832987.9042091,
-        "duration": 5,
-    }, {
-        "start": 1640832937.1988218,
-        "duration": 5,
-    }, {
-        "start": 1640832886.5146236,
-        "duration": 5,
-    }, {
-        "start": 1640842790.7178771,
-        "duration": 60,
-    }]
-}
-
-function TimeTableHeader(props) {
+function TimeTableHeader() {
     let headers = new Array(24);
     headers[0] = "Device"
     for (let i = 0; i < 24; i++) {
@@ -60,13 +42,24 @@ class TimeTable extends React.Component {
     }
 
     render() {
+        let today = new Date()
+        // get date only
+        let initial_time = new Date(today.getFullYear(), today.getMonth(), today.getDate())
+
         return (
             <Container fluid style={{width: "max-content", padding: 0}}>
                 <Table>
                     <TimeTableHeader/>
-                    <TimeLine ip_addr={data.ip_addr}
-                              mac_addr={data.mac_addr}
-                              intervals={data.intervals}/>
+                    <tbody>
+                    {this.state.clients.map((c) => {
+                        return <TimeLine key={c.mac_addr}
+                                         ip_addr={c.ip_addr}
+                                         mac_addr={c.mac_addr}
+                                         client_id={c._id}
+                                         initial_time={initial_time.getTime()}
+                        />
+                    })}
+                    </tbody>
                 </Table>
             </Container>
         )
