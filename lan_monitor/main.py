@@ -20,8 +20,8 @@ def update_status(client_manager, monitor, sample):
     now = time.time()
 
     for cli_info in clients_info:
-        # create client if not exsits
-        if not client_manager.has_client({"mac_addr": cli_info["mac"]}):
+        # create client if not exists
+        if not client_manager.has_client("mac"):
             client_manager.insert_client(ClientModel({
                 "ip_addr": cli_info["src_ip"],
                 "mac_addr": cli_info["mac"],
@@ -29,7 +29,7 @@ def update_status(client_manager, monitor, sample):
             }))
 
         # get client_id
-        res = client_manager.get_client({"mac_addr": cli_info["mac"]}, include_id=True)[0]
+        res = client_manager.get_client_by_mac_addr(cli_info["mac"], include_id=True)[0]
         # insert client status
         client_manager.insert_client_status(ClientStatusRecordModel({
             "client_id": res["_id"],

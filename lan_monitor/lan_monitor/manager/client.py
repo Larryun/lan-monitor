@@ -13,8 +13,8 @@ class ClientManager(BaseManger):
         self.client_collection = self.db["client"]
         self.status_collection = self.db["status"]
 
-    def has_client(self, client_id: str):
-        return self.client_collection.count_documents({"client_id": ObjectId(client_id)}) > 0
+    def has_client(self, mac_addr: str):
+        return self.client_collection.count_documents({"mac_addr": mac_addr}) > 0
 
     def _get_client(self, query: dict, include_id=False):
         if include_id:

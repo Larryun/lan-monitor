@@ -1,5 +1,5 @@
 from flask_restful import Resource, reqparse
-from pymongo import DESCENDING
+import pymongo
 
 from db import get_manager
 
@@ -12,6 +12,9 @@ client_status_parser.add_argument("start_time",
                                   type=int)
 client_status_parser.add_argument("end_time",
                                   required=True,
+                                  type=int)
+client_status_parser.add_argument("interval",
+                                  default=60,
                                   type=int)
 
 
@@ -26,16 +29,41 @@ class ClientStatus(Resource):
 
     def get(self, client_id):
         """ get recent ClientStatus by client_id"""
-        # TODO add parameters for time range
         # TODO convert to start_time, duration format
         manager = get_manager()
         args = client_status_parser.parse_args()
-        return list(
-            manager.get_client_status_by_id(
-                client_id
+        res = list(
+            manager.get_client_status_by_time_range(
+                client_id, args.start_time, args.end_time
             ).sort(
-                "timestamp", DESCENDING
+                "timestamp", pymongo.ASCENDING
             ).limit(
                 args.limit
             )
         )
+
+        if len(res) == 0:
+            return []
+
+        prev_time = res[0]["timestamp"]
+        result = []
+        duration = 0
+        start = res[0]["timestamp"]
+        for status in res[1:]:
+            if status["timestamp"] - prev_time <= args.interval:
+                duration += status["timestamp"] - prev_time
+            else:
+                result.append({
+                    "start": start,
+                    "duration": max(5, duration)
+                })
+                start = status["timestamp"]
+                duration = 0
+
+            prev_time = status["timestamp"]
+
+        result.append({
+            "start": start,
+            "duration": max(5, duration)
+        })
+        return result
