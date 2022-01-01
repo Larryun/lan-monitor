@@ -6,11 +6,12 @@ import {getClientStatus} from '../../api/monitor'
 const ONE_DAY = 24 * 60 * 60;
 
 function TimeInterval(props) {
+    let width = 100 * props.duration / ONE_DAY
     let interval_style = {
         backgroundColor: props.color,
-        width: 100 * props.duration / ONE_DAY + "%",
+        width: `${width}%`,
         height: "20px",
-        left: (100 * (props.start_time - props.initial_time) / ONE_DAY) - props.left_offset + "%"
+        left: (100 * (props.start_time -  props.initial_time - 60 * 60) / ONE_DAY) - props.left_offset + "%"
     }
     return (
         <div className="time-interval" style={interval_style}/>
@@ -26,11 +27,10 @@ class TimeLine extends React.Component {
     }
 
     componentDidMount() {
-        let one_day = 24 * 60 * 60;
         getClientStatus(
             this.props.client_id,
-            this.props.initial_time / 1000,
-            (this.props.initial_time / 1000) + one_day,
+            this.props.initial_time,
+            (this.props.initial_time) + ONE_DAY,
             100
         ).then((res) => {
             this.setState({
@@ -46,7 +46,7 @@ class TimeLine extends React.Component {
                                      color="red"
                                      start_time={interval.start}
                                      duration={interval.duration}
-                                     initial_time={this.props.initial_time / 1000}
+                                     initial_time={this.props.initial_time}
                                      left_offset={left_offset}/>
 
             // offset by total width of previous intervals
@@ -54,7 +54,7 @@ class TimeLine extends React.Component {
             return elem
         });
         return (
-            <tr className="align-items-center">
+            <tr>
                 <td className="text-center">
                     {this.props.ip_addr} <br/> {this.props.mac_addr}
                 </td>

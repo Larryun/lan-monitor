@@ -2,10 +2,14 @@ import React from 'react';
 import TimeLine from './TimeLine';
 import Container from 'react-bootstrap/Container'
 import Table from 'react-bootstrap/Table'
+import DatePicker from 'react-datepicker';
 
+import {getDateOnly} from "../../util";
 import {getClients} from '../../api/monitor'
 
 import './TimeTable.css';
+import "react-datepicker/dist/react-datepicker.css";
+
 
 function TimeTableHeader() {
     let headers = new Array(24);
@@ -16,11 +20,11 @@ function TimeTableHeader() {
 
     return (
         <thead className="text-center">
-        <tr>
-            {headers.map((x) => {
-                return <th className="border" key={x}>{x}</th>
-            })}
-        </tr>
+            <tr className="time-table-header">
+                {headers.map((x) => {
+                    return <th className="border" key={x}>{x}</th>
+                })}
+            </tr>
         </thead>
     )
 }
@@ -30,6 +34,7 @@ class TimeTable extends React.Component {
         super(props);
         this.state = {
             clients: [],
+            initial_time: getDateOnly(new Date())
         }
     }
 
@@ -42,13 +47,13 @@ class TimeTable extends React.Component {
     }
 
     render() {
-        let today = new Date()
-        // get date only
-        let initial_time = new Date(today.getFullYear(), today.getMonth(), today.getDate())
 
         return (
             <Container fluid style={{width: "max-content", padding: 0}}>
-                <Table>
+                <DatePicker selected={this.state.initial_time} onChange={(date) => {
+                    this.setState({initial_time: getDateOnly(date)})
+                }}/>
+                <Table bordered={true}>
                     <TimeTableHeader/>
                     <tbody>
                     {this.state.clients.map((c) => {
@@ -56,7 +61,7 @@ class TimeTable extends React.Component {
                                          ip_addr={c.ip_addr}
                                          mac_addr={c.mac_addr}
                                          client_id={c._id}
-                                         initial_time={initial_time.getTime()}
+                                         initial_time={this.state.initial_time.getTime() / 1000}
                         />
                     })}
                     </tbody>

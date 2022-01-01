@@ -3,4 +3,7 @@
     display: inline-flex;
 }
 
+.time-table-header th:not(:first-child) {
+    width: 60px;
+}
 
