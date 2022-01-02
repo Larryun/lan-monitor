@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {useEffect} from 'react'
 import TimeLine from './TimeLine'
 import Container from 'react-bootstrap/Container'
 import Table from 'react-bootstrap/Table'
@@ -36,41 +36,45 @@ function TimeTableHeader() {
     )
 }
 
-class TimeTable extends React.Component {
-    componentDidMount() {
+const TimeTable = (props) => {
+    useEffect(() => {
         // call fetchClient then fetchClientStatus sequentially
-        store.dispatch(fetchClients(() => {
-            store.dispatch(fetchClientStatus())
-        }))
-    }
+        const fetchTimeTable = () => {
+            store.dispatch(fetchClients(() => {
+                store.dispatch(fetchClientStatus())
+            }))
+        }
+        fetchTimeTable()
+        const interval_id = setInterval(() => {
+            fetchTimeTable()
+        }, 5000)
+        return () => clearInterval(interval_id)
+    }, [])
 
-
-    render() {
-        return (
-            <Container fluid style={{width: "max-content", padding: 0}}>
-                <div className="d-flex flex-row justify-content-center">
-                    <Button onClick={() => store.dispatch(decrementCurrentDate())}>Previous Day</Button>
-                    <DatePicker className="time-table-datepicker" selected={this.props.current_date * 1000}
-                                onChange={(date) => {
-                                    store.dispatch(setDateAndFetchStatus(date.getTime() / 1000))
-                                }}/>
-                    <Button onClick={() => store.dispatch(incrementCurrentDate())}>Next Day</Button>
-                </div>
-                <Table bordered={true}>
-                    <TimeTableHeader/>
-                    <tbody>
-                    {this.props.clients.map((c) => {
-                        return <TimeLine key={c.mac_addr}
-                                         ip_addr={c.ip_addr}
-                                         mac_addr={c.mac_addr}
-                                         client_id={c._id}
-                                         initial_time={this.props.current_date}/>
-                    })}
-                    </tbody>
-                </Table>
-            </Container>
-        )
-    }
+    return (
+        <Container fluid style={{width: "max-content", padding: 0}}>
+            <div className="d-flex flex-row justify-content-center">
+                <Button onClick={() => store.dispatch(decrementCurrentDate())}>Previous Day</Button>
+                <DatePicker className="time-table-datepicker" selected={props.current_date * 1000}
+                            onChange={(date) => {
+                                store.dispatch(setDateAndFetchStatus(date.getTime() / 1000))
+                            }}/>
+                <Button onClick={() => store.dispatch(incrementCurrentDate())}>Next Day</Button>
+            </div>
+            <Table bordered={true}>
+                <TimeTableHeader/>
+                <tbody>
+                {props.clients.map((c) => {
+                    return <TimeLine key={c.mac_addr}
+                                     ip_addr={c.ip_addr}
+                                     mac_addr={c.mac_addr}
+                                     client_id={c._id}
+                                     initial_time={props.current_date}/>
+                })}
+                </tbody>
+            </Table>
+        </Container>
+    )
 }
 
 const mapStateToProps = (state) => ({

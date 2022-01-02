@@ -18,39 +18,30 @@ function TimeInterval(props) {
     )
 }
 
-class TimeLine extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            intervals: [],
-        }
-    }
+const TimeLine = (props) => {
+    let left_offset = 0;
+    let intervals = props.intervals.map((interval) => {
+        let elem = <TimeInterval key={interval.start + interval.duration}
+                                 color="red"
+                                 start_time={interval.start}
+                                 duration={interval.duration}
+                                 initial_time={props.initial_time}
+                                 left_offset={left_offset}/>
 
-    render() {
-        let left_offset = 0;
-        let intervals = this.props.intervals.map((interval) => {
-            let elem = <TimeInterval key={interval.start + interval.duration}
-                                     color="red"
-                                     start_time={interval.start}
-                                     duration={interval.duration}
-                                     initial_time={this.props.initial_time}
-                                     left_offset={left_offset}/>
-
-            // offset by total width of previous intervals
-            left_offset += 100 * interval.duration / ONE_DAY
-            return elem
-        });
-        return (
-            <tr>
-                <td className="text-center">
-                    {this.props.ip_addr} <br/> {this.props.mac_addr}
-                </td>
-                <td colSpan="24" className="h-100" style={{padding: 0, height: "100%"}}>
-                    {intervals}
-                </td>
-            </tr>
-        )
-    }
+        // offset by total width of previous intervals
+        left_offset += 100 * interval.duration / ONE_DAY
+        return elem
+    });
+    return (
+        <tr>
+            <td className="text-center">
+                {props.ip_addr} <br/> {props.mac_addr}
+            </td>
+            <td colSpan="24" className="h-100" style={{padding: 0, height: "100%"}}>
+                {intervals}
+            </td>
+        </tr>
+    )
 }
 
 TimeLine.propTypes = {
