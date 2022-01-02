@@ -1,5 +1,4 @@
 import {getDateOnly} from "../util";
-import {ONE_DAY} from "../constants";
 
 const initialState = {
     clients: [],

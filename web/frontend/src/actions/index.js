@@ -39,7 +39,7 @@ export const setDateAndFetchStatus = (date) => (dispatch, getState) => {
     dispatch(fetchClientStatus())
 }
 
-export const fetchClientStatus = () => (dispatch, getState) => {
+export const fetchClientStatus = (cb) => (dispatch, getState) => {
     let clients = getState().monitor.clients
     for (let i = 0; i < clients.length; i++) {
         // get status for each clients
@@ -50,13 +50,19 @@ export const fetchClientStatus = () => (dispatch, getState) => {
             100
         ).then((res) => {
             dispatch(setClientStatus(clients[i]._id, res.data))
+            // call callback at the end only
+            if (typeof cb === 'function' && clients.length - 1) {
+                cb()
+            }
         })
     }
 }
 
-export const fetchClients = () => () => {
+export const fetchClients = (cb) => () => {
     getClients().then((res) => {
         store.dispatch(loadClients(res.data))
+        // call callback when done
+        cb()
     })
 }
 
