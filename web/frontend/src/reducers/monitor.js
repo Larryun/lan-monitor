@@ -1,13 +1,18 @@
+import {getDateOnly} from "../util";
+import {ONE_DAY} from "../constants";
+
 const initialState = {
     clients: [],
-    status: []
+    status: {},
+    current_date: getDateOnly(new Date()).getTime() / 1000
 }
 export default function monitorReducer(state = initialState, action) {
     switch (action.type) {
         case 'monitor/loadClients': {
             return {
+                ...state,
                 clients: action.payload,
-                status: [],
+                status: {},
             }
         }
         case 'monitor/addClient': {
@@ -17,6 +22,21 @@ export default function monitorReducer(state = initialState, action) {
                     ...state.clients,
                     action.payload
                 ]
+            }
+        }
+        case 'monitor/setCurrentDate': {
+            return {
+                ...state,
+                current_date: action.payload
+            }
+        }
+        case 'monitor/setClientStatus': {
+            return {
+                ...state,
+                status: {
+                    ...state.status,
+                    [action.payload.client_id]: action.payload.intervals
+                }
             }
         }
         default: {

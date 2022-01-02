@@ -2,7 +2,7 @@ import { combineReducers } from 'redux'
 import monitorReducer from "./monitor";
 
 const rootReducer = combineReducers({
-    monitorReducer,
+    monitor: monitorReducer,
 })
 
 export default rootReducer

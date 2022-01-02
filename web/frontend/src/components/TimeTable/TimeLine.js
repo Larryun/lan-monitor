@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import './TimeTable.css';
-import {getClientStatus} from '../../api/monitor'
+import {connect} from 'react-redux'
 
 const ONE_DAY = 24 * 60 * 60;
 
@@ -11,7 +11,7 @@ function TimeInterval(props) {
         backgroundColor: props.color,
         width: `${width}%`,
         height: "20px",
-        left: (100 * (props.start_time -  props.initial_time - 60 * 60) / ONE_DAY) - props.left_offset + "%"
+        left: (100 * (props.start_time -  props.initial_time) / ONE_DAY) - props.left_offset + "%"
     }
     return (
         <div className="time-interval" style={interval_style}/>
@@ -22,26 +22,13 @@ class TimeLine extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            intervals: []
+            intervals: [],
         }
-    }
-
-    componentDidMount() {
-        getClientStatus(
-            this.props.client_id,
-            this.props.initial_time,
-            (this.props.initial_time) + ONE_DAY,
-            100
-        ).then((res) => {
-            this.setState({
-                intervals: res.data
-            })
-        })
     }
 
     render() {
         let left_offset = 0;
-        let intervals = this.state.intervals.map((interval) => {
+        let intervals = this.props.intervals.map((interval) => {
             let elem = <TimeInterval key={interval.start + interval.duration}
                                      color="red"
                                      start_time={interval.start}
@@ -70,7 +57,6 @@ TimeLine.propTypes = {
     ip_addr: PropTypes.string.isRequired,
     mac_addr: PropTypes.string.isRequired,
     client_id: PropTypes.string.isRequired,
-    initial_time: PropTypes.number.isRequired,
 }
 
 TimeInterval.propTypes = {
@@ -81,4 +67,12 @@ TimeInterval.propTypes = {
     left_offset: PropTypes.number.isRequired,
 }
 
-export default TimeLine
+const mapStateToProps = (state, ownProps) => {
+    if (state.monitor.status.hasOwnProperty(ownProps.client_id)) {
+        return {intervals: state.monitor.status[ownProps.client_id]}
+    } else {
+        return {intervals: []}
+    }
+}
+
+export default connect(mapStateToProps)(TimeLine)
