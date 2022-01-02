@@ -7,7 +7,6 @@ function getClients() {
 }
 
 function getClientStatus(client_id, start_time, end_time, interval, limit = 0) {
-    console.log(start_time, end_time)
     return axios.get(api_url + `/client/status/${client_id}`, {
         params: {
             "start_time": start_time,

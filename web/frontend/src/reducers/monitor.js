@@ -39,6 +39,12 @@ export default function monitorReducer(state = initialState, action) {
                 }
             }
         }
+        case 'monitor/removeClientStatus': {
+            return {
+                ...state,
+                status: {}
+            }
+        }
         default: {
             return state
         }

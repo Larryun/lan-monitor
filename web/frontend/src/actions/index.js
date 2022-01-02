@@ -17,18 +17,25 @@ export const setClientStatus = (client_id, intervals) => ({
     payload: {client_id, intervals}
 })
 
+export const removeClientStatus = () => ({
+    type: 'monitor/removeClientStatus',
+})
+
 export const incrementCurrentDate = () => (dispatch, getState) => {
     dispatch(setCurrentDate(getState().monitor.current_date + ONE_DAY))
+    dispatch(removeClientStatus())
     dispatch(fetchClientStatus())
 }
 
 export const decrementCurrentDate = () => (dispatch, getState) => {
     dispatch(setCurrentDate(getState().monitor.current_date - ONE_DAY))
+    dispatch(removeClientStatus())
     dispatch(fetchClientStatus())
 }
 
 export const setDateAndFetchStatus = (date) => (dispatch, getState) => {
     dispatch(setCurrentDate(date))
+    dispatch(removeClientStatus())
     dispatch(fetchClientStatus())
 }
 
