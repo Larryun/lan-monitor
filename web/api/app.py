@@ -18,7 +18,7 @@ class CustomJSONEncoder(json.JSONEncoder):
 
 
 app = Flask(__name__)
-api = Api(app)
+api = Api(app, prefix="/api")
 
 CORS(app, resources={r'/*': {"origins": "*"}})
 

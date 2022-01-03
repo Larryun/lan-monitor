@@ -10,21 +10,30 @@ services:
       - "27017:27017"
     volumes:
       - mongo-db:/data/db
+    networks:
+      - lan-monitor
   monitor:
-    network_mode: bridge
+    network_mode: host
     build:
       dockerfile: ./lan_monitor/Dockerfile
+    command: python -u lan_monitor/main.py -c ./config.dev.yaml -i 10 -s 2 -d
   api:
     build:
       dockerfile: ./web/api/Dockerfile
     environment:
-      FLASK_ENV: dev
+      FLASK_ENV: prod
     command: gunicorn -w 1 -b :5001 app:app
+    expose:
+      - "5001"
+    networks:
+      - lan-monitor
+  nginx:
+    build:
+      dockerfile: ./nginx/Dockerfile
     ports:
-      - "5001:5001"
-
-
-
+      - "8080:80"
+    networks:
+      - lan-monitor
 
 volumes:
   mongo-db:
@@ -33,3 +42,7 @@ volumes:
       o: bind
       type: none
       device: "f:/mongo/"
+
+networks:
+  lan-monitor:
+    driver: bridge

@@ -3,7 +3,7 @@ import TimeLine from './TimeLine'
 import Container from 'react-bootstrap/Container'
 import Table from 'react-bootstrap/Table'
 import DatePicker from 'react-datepicker'
-import Button from 'react-bootstrap/button'
+import Button from 'react-bootstrap/Button'
 import store from '../../store'
 import {connect} from 'react-redux'
 
