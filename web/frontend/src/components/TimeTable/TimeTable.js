@@ -45,6 +45,7 @@ const TimeTable = (props) => {
             }))
         }
         fetchTimeTable()
+        // refresh every 5 seconds
         const interval_id = setInterval(() => {
             fetchTimeTable()
         }, 5000)

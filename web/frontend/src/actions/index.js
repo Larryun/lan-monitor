@@ -46,7 +46,7 @@ export const fetchClientStatus = (cb) => (dispatch, getState) => {
         getClientStatus(
             clients[i]._id,
             getState().monitor.current_date,
-            getState().monitor.current_date + 24 * 60 * 60,
+            getState().monitor.current_date + ONE_DAY,
             100
         ).then((res) => {
             dispatch(setClientStatus(clients[i]._id, res.data))

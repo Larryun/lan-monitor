@@ -2,7 +2,7 @@ import axios from 'axios';
 
 let api_url = process.env["REACT_APP_API_URL"]
 
-async function getClients() {
+function getClients() {
     return axios.get(api_url + "/client")
 }
 
