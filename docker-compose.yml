@@ -13,8 +13,17 @@ services:
   monitor:
     network_mode: bridge
     build:
-      context: .
-      dockerfile: "docker/Dockerfile"
+      dockerfile: ./lan_monitor/Dockerfile
+  api:
+    build:
+      dockerfile: ./web/api/Dockerfile
+    environment:
+      FLASK_ENV: dev
+    command: gunicorn -w 1 -b :5001 app:app
+    ports:
+      - "5001:5001"
+
+
 
 
 volumes:

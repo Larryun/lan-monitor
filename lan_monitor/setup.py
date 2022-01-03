@@ -4,7 +4,7 @@ setuptools.setup(
     name="lan_monitor",
     version="0.0.1",
     author="Larry",
-    packages=["lan_monitor"],
+    packages=setuptools.find_packages(),
     # package_dir={"": "src"},
     python_requires='>=3.6',
     install_requires=[

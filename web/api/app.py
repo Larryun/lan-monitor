@@ -11,7 +11,6 @@ from db import close_manager
 
 class CustomJSONEncoder(json.JSONEncoder):
     """ Customized JsonEncoder for deserializing ObjectId """
-
     def default(self, o):
         if isinstance(o, ObjectId):
             return str(o)
@@ -26,14 +25,12 @@ CORS(app, resources={r'/*': {"origins": "*"}})
 # set configurations
 if "FLASK_ENV" not in environ:
     raise RuntimeError("FLASK_ENV is not set")
-elif environ["FLASK_ENV"] == "dev":
-    config = read_yaml("web/api/instance/api.config.dev.yaml")
-elif environ["FLASK_ENV"] == "test":
-    config = read_yaml("web/api/instance/api.config.test.yaml")
+elif environ["FLASK_ENV"] in ["dev", "test", "prod"]:
+    config = read_yaml(f"./instance/api.config.{environ['FLASK_ENV']}.yaml")
 else:
-    raise RuntimeError("FLASK_ENV is not dev/test")
-
+    raise RuntimeError("FLASK_ENV is not valid")
 app.config.update(config)
+
 # set default JSONEncoder to CustomJSONEncoder
 app.config.setdefault("RESTFUL_JSON", {})["cls"] = CustomJSONEncoder
 
