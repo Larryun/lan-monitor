@@ -4,7 +4,10 @@ WORKDIR /app
 ENV PATH /app/node_modules/.bin:$PATH
 COPY ./web/frontend/package.json ./
 COPY ./web/frontend/package-lock.json ./
+
+COPY ./web/frontend/.env.development ./
 COPY ./web/frontend/.env.production.local ./
+
 COPY ./web/frontend/src ./src
 COPY ./web/frontend/public ./public
 RUN npm ci --silent
