@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react'
+import React, {useEffect, useState} from 'react'
 import TimeLine from './TimeLine'
 import Container from 'react-bootstrap/Container'
 import Table from 'react-bootstrap/Table'
@@ -16,6 +16,7 @@ import {
     incrementCurrentDate,
     setDateAndFetchStatus
 } from "../../actions";
+import {INITIAL_UPDATE_INTERVAL, UPDATE_INTERVAL_MINIMUM} from "../../constants";
 
 
 function TimeTableHeader() {
@@ -37,6 +38,7 @@ function TimeTableHeader() {
 }
 
 const TimeTable = (props) => {
+    const [updateInterval, setUpdateInterval] = useState(INITIAL_UPDATE_INTERVAL)
     useEffect(() => {
         // call fetchClient then fetchClientStatus sequentially
         const fetchTimeTable = () => {
@@ -48,19 +50,28 @@ const TimeTable = (props) => {
         // refresh every 5 seconds
         const interval_id = setInterval(() => {
             fetchTimeTable()
-        }, 5000)
+        }, Math.max(UPDATE_INTERVAL_MINIMUM, updateInterval) * 1000)
         return () => clearInterval(interval_id)
-    }, [])
+    }, [updateInterval])
 
     return (
         <Container fluid style={{width: "max-content", padding: 0}}>
-            <div className="d-flex flex-row justify-content-center">
-                <Button onClick={() => store.dispatch(decrementCurrentDate())}>Previous Day</Button>
-                <DatePicker className="time-table-datepicker" selected={props.current_date * 1000}
+            <div className="d-flex flex-row justify-content-center m-1">
+                <Button onClick={() => store.dispatch(decrementCurrentDate())} className="mx-1">Previous Day</Button>
+                <DatePicker className="time-table-datepicker text-center" selected={props.current_date * 1000}
                             onChange={(date) => {
                                 store.dispatch(setDateAndFetchStatus(date.getTime() / 1000))
                             }}/>
-                <Button onClick={() => store.dispatch(incrementCurrentDate())}>Next Day</Button>
+                <Button onClick={() => store.dispatch(incrementCurrentDate())} className="mx-1">Next Day</Button>
+            </div>
+            <div className="d-flex flex-row justify-content-center m-1">
+                <label for="updateIntervalInput" className="mx-1">
+                    Update Interval:
+                </label>
+                <input id="updateIntervalInput" type="number" min={UPDATE_INTERVAL_MINIMUM} value={updateInterval}
+                       onChange={(e) => {
+                           setUpdateInterval(e.target.value)
+                       }}/>
             </div>
             <Table bordered={true}>
                 <TimeTableHeader/>
