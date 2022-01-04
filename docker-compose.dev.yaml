@@ -15,10 +15,12 @@ services:
   monitor:
     network_mode: host
     build:
+      context: .
       dockerfile: ./lan_monitor/Dockerfile
     command: python -u lan_monitor/main.py -c ./config.dev.yaml -i 10 -s 2 -d
   api:
     build:
+      context: .
       dockerfile: ./web/api/Dockerfile
     environment:
       FLASK_ENV: prod
@@ -29,6 +31,7 @@ services:
       - lan-monitor
   nginx:
     build:
+      context: .
       dockerfile: ./nginx/Dockerfile
     ports:
       - "8080:80"

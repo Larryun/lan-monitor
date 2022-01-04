@@ -1,12 +1,12 @@
 # Build step #1: build the React front end
-FROM node:16-alpine as build-step
+FROM node:lts-buster as build-step
 WORKDIR /app
 ENV PATH /app/node_modules/.bin:$PATH
-COPY ../web/frontend/package.json ./
-COPY ../web/frontend/package-lock.json ./
-COPY ../web/frontend/.env.production.local ./
-COPY ../web/frontend/src ./src
-COPY ../web/frontend/public ./public
+COPY ./web/frontend/package.json ./
+COPY ./web/frontend/package-lock.json ./
+COPY ./web/frontend/.env.production.local ./
+COPY ./web/frontend/src ./src
+COPY ./web/frontend/public ./public
 RUN npm ci --silent
 RUN npm run build
 
