@@ -7,7 +7,8 @@ def create_mongo_client(host="localhost", port=27017,
     mongod = MongoClient(host, port,
                          username=username,
                          password=password,
-                         authMechanism='SCRAM-SHA-256')
+                         authMechanism='SCRAM-SHA-1')
+    # authMechanism = 'SCRAM-SHA-256')
     return mongod
 
 

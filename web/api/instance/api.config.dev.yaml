@@ -1,5 +1,5 @@
 mongodb:
-  host: mongo
+  host: localhost
   port: 27017
   db: dev_lan_monitor
   username: root
